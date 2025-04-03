@@ -2,6 +2,9 @@ package othello.gamelogic;
 
 import java.util.*;
 
+
+// Central class for game logic, board management, and turn handling.
+
 /**
  * Models a board of Othello.
  * Includes methods to get available moves and take spaces.
@@ -64,7 +67,41 @@ public class OthelloGame {
      * @param x the x-coordinate of the space to claim
      * @param y the y-coordinate of the space to claim
      */
-    public void takeSpace(Player actingPlayer, Player opponent, int x, int y) {}
+    public void takeSpace(Player actingPlayer, Player opponent, int x, int y) {
+        // check x and y are valid inputs
+        if (x < 0 || x >= GAME_BOARD_SIZE || y < 0 || y >= GAME_BOARD_SIZE) {
+            return;
+        }
+        // No need - check actingPlayer, opponent valid
+        // Construct BoardSpace for this x-y space
+        BoardSpace boardSpace = board[x][y];
+
+        // First check for current player bc if already owned by them, do nothing
+        if (boardSpace.getType() == actingPlayer.getColor()) {
+            return;
+        }
+        // If NOT already owned by current player, it could be empty or owned by opponent
+        // either way this might change, so need to record current state before changing
+        BoardSpace.SpaceType previousType = boardSpace.getType(); // type is an ENUM represents STATE: empty, black, white
+
+        // Flow of game in GameController and getAvailableMoves() means being able call
+        // takeSpace on a board space owned by opponent is legal and results in a 'win' flip of opponent's color
+
+        // Update the lists based on previous state
+        // Remove this x-y space from opponent's list of board spaces
+        if (previousType == opponent.getColor()) {
+            opponent.getPlayerOwnedSpacesSpaces().remove(boardSpace);
+        }
+
+        // Change the space type (COLOR) to current player's color (already checked this is possible)
+        boardSpace.setType(actingPlayer.getColor());
+
+        // Add this x-y space to acting player's list of board spaces
+        actingPlayer.getPlayerOwnedSpacesSpaces().add(boardSpace);
+
+        // check if space already taken by actingPlayer (which has getter of List<BoardSpace> playerOwnedSpaces )
+        actingPlayer.getPlayerOwnedSpacesSpaces();
+    }
 
     /**
      * PART 1

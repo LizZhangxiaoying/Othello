@@ -11,6 +11,8 @@ public class ComputerPlayer extends Player{
         // This input should match the ones specified in App.java!
     }
 
+    // IMPLEMENT THE STRATEGIES HERE: "minimax", "expectimax", "mcts", "custom"
+
     // PART 2
     // TODO: implement a method that returns a BoardSpace that a strategy selects
 }

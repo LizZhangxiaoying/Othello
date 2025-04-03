@@ -23,7 +23,7 @@ public abstract class Player {
         return color;
     }
 
-    /**
+    /** find valid moves on the board
      * PART 1
      * TODO: Implement this method
      * Gets the available moves for this player given a certain board state.

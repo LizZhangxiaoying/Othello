@@ -15,7 +15,7 @@ public class BoardSpace {
     public BoardSpace(int x, int y, SpaceType type) {
         this.x = x;
         this.y = y;
-        setType(type);
+        setType(type);// represents STATE: empty, black, white
     }
 
     // Copy constructor
