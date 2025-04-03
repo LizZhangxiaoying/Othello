@@ -113,7 +113,38 @@ public class OthelloGame {
      * @param availableMoves map of the available moves, that maps destination to list of origins
      * @param selectedDestination the specific destination that a HUMAN player selected
      */
-    public void takeSpaces(Player actingPlayer, Player opponent, Map<BoardSpace, List<BoardSpace>> availableMoves, BoardSpace selectedDestination) {}
+
+    // Whereas getAvailableMoves identifies where a player can legally place a piece and which existing pieces form valid "sandwich" lines
+    // takeSpaces actually executes a move by placing a piece and flipping all sandwiched pieces
+    public void takeSpaces(Player actingPlayer, Player opponent, Map<BoardSpace, List<BoardSpace>> availableMoves, BoardSpace selectedDestination) {
+        // Claim the specified space (selectedDestination) for the current player; rest of method only activates after this is DONE
+        takeSpace(actingPlayer, opponent, selectedDestination.getX(), selectedDestination.getY());
+
+        // availablesMoves is a map with a destination BoardSpace mapped to a List of origin BoardSpaces.
+            // Keys: Valid destination spaces where a player can place a new piece
+            // Values: Lists of "origin" spaces (those player already owns) that form valid sandwiching lines with that destination
+        // Get all origins (values: List) for this selected destination (keys) from Map <BoardSpace, List<BoardSpace>>
+        List<BoardSpace> origins = availableMoves.get(selectedDestination);
+
+        // For every origin space in List, flip all pieces between origin and destination
+        for (BoardSpace origin : origins) {
+            // Indicate -1, 0, or 1 for the direction to take by comparing x-y coordinates of selected and origin spaces
+            int dx = Integer.compare(selectedDestination.getX() - origin.getX(), 0);
+            int dy = Integer.compare(selectedDestination.getY() - origin.getY(), 0);
+
+            // Start from the space NEXT to origin (which is already occupied, so you don't start from origin itself)
+            int x = origin.getX() + dx;
+            int y = origin.getY() + dy;
+
+            // Because availableMoves map already ensured every piece in that line between origin and destination is flippable
+            // We can keep calling takeSpace on every space until we get to destination x-y
+            while (x != selectedDestination.getX() || y != selectedDestination.getY()) {
+                takeSpace(actingPlayer, opponent, x, y);
+                x += dx;
+                y += dy;
+            }
+        }
+    }
 
     /**
      * PART 2
